@@ -4,17 +4,17 @@ const ETHTX = require("ethereumjs-tx");
 const SqoinToken = require("../build/contracts/SqoinToken.json");
 const Game = require("../build/contracts/Game.json");
 
-var provider = "your infura link";
+var provider = "";
 
 /*  init web3 connection */
 
 
 let web3 = new Web3(provider);
-let sqoinAddress = "0xc76D83FE59905A8985e203548B1dd1D446320518";
+let sqoinAddress = "";
 
 /* player account */
-let account = "your address";
-let privateKey = "your private key";
+let account = "";
+let privateKey = "";
 /* ---- */
 
 let sqoinToken = new web3.eth.Contract(SqoinToken.abi, sqoinAddress);
@@ -66,4 +66,10 @@ createNewChallenge(
         console.log("challenge created ! " + txhash)
 
     }
-)
+) 
+/*
+sqoinToken.methods.myGame(account).call().then(
+            address => {
+                console.log("new game created with address " + address);
+            }
+        );*/

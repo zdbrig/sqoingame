@@ -4,7 +4,7 @@ const ETHTX = require("ethereumjs-tx");
 const SqoinToken = require("../build/contracts/SqoinToken.json");
 const Game = require("../build/contracts/Game.json");
 
-var provider = "your infura link";
+var provider = "";
 
 /*  init web3 connection */
 
@@ -12,26 +12,21 @@ var provider = "your infura link";
 let web3 = new Web3(provider);
 
 /* player account */
-let account = "yout account";
-let privateKey = "your private key";
+let account = "";
+let privateKey = "";
 /* ---- */
 
 
-let gameAddress = "0xa150298B22D402B344742cd9df0E0CeB84fe6cC8";
-let game = new web3.eth.Contract(Game.abi, gameAddress);
 
-game.methods.currentNumber().call().then(
-    number => console.log(number)
-)
 
-makeMove = (onerror, play) => {
+makeMove = (onerror, game ,  number , gameAddress) => {
     web3.eth.getTransactionCount(account, (err, nonce) => {
         if (err) {
             console.log("problem getting nonce" + err);
             onerror();
             return;
         }
-        let method = game.methods.updateNumber(5030);
+        let method = game.methods.updateNumber(number);
 
         let tx = new ETHTX.Transaction({
             nonce: nonce,
@@ -53,12 +48,41 @@ makeMove = (onerror, play) => {
                 return;
             }
 
-            play(hash, nonce + 1);
+            console.log("move done !");
         });
     });
 }
 
-makeMove(
-    err => console.log(err),
-    (hash, nonce) => { console.log("great , move done, let's see what Bacem will do right now !") }
-)
+
+let values = require("./moves");
+
+
+let play = x => values[x];
+
+
+let gameList =  [ "0xbf532B8b83E6A8480f667b0F42Dc57057ced1518" ];
+
+
+setInterval(() => {
+    gameList.forEach(gameAddress => {
+    let game = new web3.eth.Contract(Game.abi, gameAddress);
+    game.methods.turn().call().then(
+        address => {
+            console.log("current turn address = " + address);
+            if (address === account) {
+                game.methods.currentNumber().call().then(
+                    number => {
+                        if (number ) {
+                            let response = play(number);
+                            console.log(number + " " + response);
+                            makeMove( () => {} , game ,  response , gameAddress);
+                        }
+                        
+                    }
+                )
+            }
+        }
+    )
+    
+    });
+}, 10000);

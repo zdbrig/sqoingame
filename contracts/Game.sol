@@ -27,6 +27,10 @@ contract Game {
     return number;
   }
 
+  function turn() public view returns (address) {
+    return currentPlayer;
+  }
+
   function currentWinningPlayer() public view returns (address) {
     return winningPlayer;
   }
