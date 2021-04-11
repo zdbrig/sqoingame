@@ -1,3 +1,8 @@
+/**
+ * @author Gahlouzi Saif Eddine <gahlouzi.saif.93@gmail.com>
+ * Coins Collected = 40
+ **/
+
 const regex = /0/gi;
 
 getLength = (number) => {
@@ -30,4 +35,4 @@ play = (currentNumber) => {
   );
 };
 
-module.exports =play;
+module.exports = play;
